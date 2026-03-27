@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Panel | Dr. Sadaf</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #0f172a; color: white; padding: 20px; display: flex; flex-direction: column; align-items: center; min-height: 100vh; margin: 0; }
+        
+        /* LOGIN BOX */
+        .login-box { background: #1e293b; padding: 40px; border-radius: 12px; text-align: center; width: 100%; max-width: 300px; margin-top: 100px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        input { padding: 12px; width: 100%; margin: 10px 0; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: white; box-sizing: border-box; }
+        button { background: #3b82f6; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: 600; width: 100%; margin-top: 10px; }
+        button:hover { background: #2563eb; }
+
+        /* DASHBOARD */
+        #dashboard { display: none; width: 100%; max-width: 600px; }
+        .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 30px; border-bottom: 1px solid #334155; padding-bottom: 20px; }
+        .header h2 { margin: 0; font-weight: 400; }
+        .header span { color: #3b82f6; font-weight: 600; }
+
+        .item { background: #1e293b; padding: 20px; margin-bottom: 15px; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; border-left: 4px solid #3b82f6; animation: slideIn 0.3s ease; }
+        @keyframes slideIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .details strong { font-size: 1.1rem; display: block; margin-bottom: 4px; }
+        .details span { color: #94a3b8; font-size: 0.9rem; }
+        
+        .actions { display: flex; gap: 10px; }
+        .btn-yes { background: #10b981; width: auto; padding: 8px 16px; font-size: 0.9rem; margin: 0; }
+        .btn-yes:hover { background: #059669; }
+        .btn-no { background: #ef4444; width: auto; padding: 8px 16px; font-size: 0.9rem; margin: 0; }
+        .btn-no:hover { background: #dc2626; }
+        
+        .empty-state { text-align: center; color: #475569; margin-top: 50px; }
+    </style>
+</head>
+<body>
+
+    <div id="login" class="login-box">
+        <h2 style="margin-top:0">🔒 Admin Access</h2>
+        <p style="color:#94a3b8; font-size:0.9rem; margin-bottom:20px">Dr. Sadaf Inam Ullah</p>
+        <input type="password" id="pass" placeholder="Enter Password">
+        <button onclick="login()">Login Dashboard</button>
+    </div>
+
+    <div id="dashboard">
+        <div class="header">
+            <h2>Requests</h2>
+            <span>Live Panel</span>
+        </div>
+        <div id="list">
+            <div class="empty-state">No pending appointments...</div>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        
+        function login() {
+            const p = document.getElementById('pass').value;
+            socket.emit('admin_login', p);
+        }
+
+        socket.on('login_success', (data) => {
+            document.getElementById('login').style.display = 'none';
+            document.getElementById('dashboard').style.display = 'block';
+            renderList(data);
+        });
+
+        socket.on('login_fail', () => alert("❌ Wrong Password!"));
+
+        socket.on('new_request', (data) => {
+            new Audio('https://assets.mixkit.co/active_storage/sfx/2869/2869-preview.mp3').play();
+            renderList([data], true); 
+        });
+
+        socket.on('update_list', (data) => renderList(data));
+
+        function renderList(items, append = false) {
+            const list = document.getElementById('list');
+            if(items.length === 0 && !append) {
+                list.innerHTML = '<div class="empty-state">No pending appointments...</div>';
+                return;
+            }
+            
+            // Remove empty state if it exists
+            if(document.querySelector('.empty-state')) list.innerHTML = "";
+            if(!append) list.innerHTML = ""; 
+
+            items.forEach(appt => {
+                const div = document.createElement('div');
+                div.className = 'item';
+                div.innerHTML = `
+                    <div class="details">
+                        <strong>${appt.name}</strong>
+                        <span>${appt.service} • ${appt.time}</span><br>
+                        <span style="color:#64748b; font-size:0.8rem">${appt.phone}</span>
+                    </div>
+                    <div class="actions">
+                        <button class="btn-yes" onclick="approve(${appt.id})">✔ Accept</button>
+                        <button class="btn-no" onclick="reject(${appt.id})">✖ Block</button>
+                    </div>
+                `;
+                list.prepend(div);
+            });
+        }
+
+        function approve(id) { socket.emit('approve_booking', id); }
+        function reject(id) { socket.emit('reject_booking', id); }
+    </script>
+</body>
+</html>

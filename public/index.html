@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dr. Sadaf Inam Ullah | Dental Clinic</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #1e3a8a; /* Royal Blue */
+            --accent: #0ea5e9;  /* Light Blue */
+            --bg: #f8fafc;
+            --text: #334155;
+        }
+        body { margin: 0; font-family: 'Inter', sans-serif; background: var(--bg); color: var(--text); }
+        
+        /* HEADER */
+        header { background: white; padding: 20px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); text-align: center; }
+        .brand { color: var(--primary); font-size: 1.5rem; font-weight: 700; letter-spacing: -0.5px; }
+        .brand span { color: var(--accent); }
+        .subtitle { font-size: 0.9rem; color: #64748b; margin-top: 5px; }
+
+        /* HERO SECTION */
+        .hero { text-align: center; padding: 40px 20px; }
+        .hero h1 { font-weight: 300; color: var(--primary); margin-bottom: 10px; }
+        .hero p { max-width: 500px; margin: 0 auto; line-height: 1.6; }
+
+        /* CARDS GRID */
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1000px; margin: 30px auto; padding: 0 20px; }
+        .card { background: white; padding: 30px; border-radius: 12px; border: 1px solid #e2e8f0; transition: transform 0.2s, box-shadow 0.2s; text-align: center; }
+        .card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(30, 58, 138, 0.1); border-color: var(--accent); }
+        .card h3 { color: var(--primary); margin-bottom: 10px; }
+        .price { color: var(--accent); font-weight: 600; display: block; margin-bottom: 20px; }
+        .btn-book { background: var(--primary); color: white; border: none; padding: 12px 25px; border-radius: 50px; cursor: pointer; font-weight: 600; width: 100%; transition: background 0.2s; }
+        .btn-book:hover { background: #172554; }
+
+        /* FOOTER */
+        footer { background: #1e293b; color: white; padding: 40px 20px; text-align: center; margin-top: 50px; font-size: 0.9rem; }
+        .footer-content { max-width: 600px; margin: 0 auto; line-height: 1.8; }
+        .dev-credit { margin-top: 30px; padding-top: 20px; border-top: 1px solid #334155; font-size: 0.8rem; color: #94a3b8; }
+        .highlight { color: var(--accent); font-weight: bold; }
+
+        /* MODAL */
+        #modal { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(15, 23, 42, 0.6); backdrop-filter: blur(4px); justify-content: center; align-items: center; z-index: 1000; }
+        .modal-content { background: white; padding: 40px; border-radius: 16px; width: 90%; max-width: 400px; box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25); position: relative; }
+        .modal-content h2 { margin-top: 0; color: var(--primary); }
+        input, select { width: 100%; padding: 15px; margin: 10px 0; border: 1px solid #cbd5e1; border-radius: 8px; font-family: inherit; box-sizing: border-box; background: #f8fafc; }
+        input:focus, select:focus { outline: 2px solid var(--accent); border-color: transparent; }
+        .close-btn { position: absolute; top: 15px; right: 20px; font-size: 24px; cursor: pointer; color: #94a3b8; }
+        .close-btn:hover { color: #ef4444; }
+
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="brand">Dr. Sadaf <span>Inam Ullah</span></div>
+        <div class="subtitle">Premium Dental Care Center</div>
+    </header>
+
+    <div class="hero">
+        <h1>Smile with Confidence</h1>
+        <p>Professional dental care in a relaxing environment. Book your appointment online today.</p>
+    </div>
+
+    <div class="grid">
+        <div class="card">
+            <h3>🦷 Root Canal</h3>
+            <span class="price">Consultation Available</span>
+            <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Save your natural tooth with our painless procedure.</p>
+            <button class="btn-book" onclick="openForm('Root Canal')">Book Appointment</button>
+        </div>
+
+        <div class="card">
+            <h3>✨ Teeth Whitening</h3>
+            <span class="price">Brighten Your Smile</span>
+            <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Professional cleaning and whitening services.</p>
+            <button class="btn-book" onclick="openForm('Whitening')">Book Appointment</button>
+        </div>
+
+        <div class="card">
+            <h3>🩺 General Checkup</h3>
+            <span class="price">Regular Care</span>
+            <p style="color:#64748b; font-size:0.9rem; margin-bottom:20px;">Routine inspection for gum health and hygiene.</p>
+            <button class="btn-book" onclick="openForm('Checkup')">Book Appointment</button>
+        </div>
+    </div>
+
+    <footer>
+        <div class="footer-content">
+            <h3>📍 Visit Us</h3>
+            <p>Near Alhamd Sweets<br>Renala Khurd, Pakistan</p>
+            
+            <h3 style="margin-top:20px">📞 Contact</h3>
+            <p>0343-4058401<br>beingrealbilal@gmail.com</p>
+        </div>
+        
+        <div class="dev-credit">
+            System Developed by <span class="highlight">Bilal Ikram</span>
+        </div>
+    </footer>
+
+    <div id="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="closeForm()">&times;</span>
+            <h2 id="s-name">Service</h2>
+            <p style="margin-bottom:20px; color:#64748b;">Please enter your details to request an appointment.</p>
+            
+            <input id="name" placeholder="Full Name">
+            <input id="phone" placeholder="Phone Number (e.g. 0343...)" type="tel">
+            <select id="time">
+                <option value="" disabled selected>Select Preferred Time</option>
+                <option>10:00 AM</option>
+                <option>02:00 PM</option>
+                <option>06:00 PM</option>
+                <option>08:00 PM</option>
+            </select>
+            
+            <button class="btn-book" onclick="submitBooking()" style="margin-top:10px;">Confirm Request</button>
+        </div>
+    </div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const modal = document.getElementById('modal');
+        let selected = "";
+
+        function openForm(s) { 
+            selected = s; 
+            document.getElementById('s-name').innerText = s; 
+            modal.style.display = 'flex'; 
+        }
+        function closeForm() { modal.style.display = 'none'; }
+
+        // Close modal if clicking outside
+        window.onclick = function(event) {
+            if (event.target == modal) { closeForm(); }
+        }
+
+        function submitBooking() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const time = document.getElementById('time').value;
+            
+            if(!name || !phone || !time) return alert("Please fill in all fields.");
+
+            socket.emit('new_booking', { name, phone, service: selected, time });
+            
+            // Visual Feedback
+            alert("✅ Request Sent Successfully! Dr. Sadaf will review it shortly.");
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
+            closeForm();
+        }
+    </script>
+</body>
+</html>
